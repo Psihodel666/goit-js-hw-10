@@ -18,8 +18,8 @@ function onCountryInput() {
     const name = refs.inputEl.value.trim();
     if (name === "") {
         return refs.countryList.innerHTML = ""}
-
-
+   
+        
 
     fetchCountries(name)
         .then(countries => {
@@ -29,14 +29,20 @@ function onCountryInput() {
                 refs.countryList.insertAdjacentHTML('beforeend', renderCountryList(countries))
                 refs.countryInfo.insertAdjacentHTML('beforeend', renderCountryInfo(countries))
             } else if (countries.length >= 10) {
-                alertTooManyMatches()
+                refs.countryList.innerHTML = ''
+                refs.countryInfo.innerHTML = ''
+                Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
                 
             } else {
                 refs.countryList.insertAdjacentHTML('beforeend', renderCountryList(countries))
             }
         })
-        .catch('Oops, there is no country with that name', (refs.countryList.innerHTML = ''),(refs.countryInfo.innerHTML = ''))
-};  
+        .catch(error => {
+            Notiflix.Notify.failure('Oops, there is no country with that name') ;
+            refs.countryList.innerHTML = '';
+            refs.countryInfo.innerHTML = '';
+        
+});
 
 
 function renderCountryList(arrayNameFlag) {
@@ -57,11 +63,4 @@ function renderCountryInfo(arrayFullInfo) {
         }).join("")
     return markup;
 };
-
-// function alertWrongName() {
-//   Notiflix.Notify.failure('Oops, there is no country with that name')
-// }
-
-function alertTooManyMatches() {
-  Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
 }
